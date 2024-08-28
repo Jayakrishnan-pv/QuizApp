@@ -7,17 +7,25 @@ body {
     margin: 0;  
 }
 
-h1{
-    font-size: 40px;
+.heading1 {
+    font-size: 2.5rem; /* 40px */
     margin: 0;
 }
 
-#question-container > h1{
-    font-size: 24px;
-    margin: 10px;
+.heading2 {
+    font-size: 1rem; /* 16px */
 }
 
-#heading{
+.heading3 {
+    font-size: 1.25rem; /* 20px */
+}
+
+#question-container > h1 {
+    font-size: 1.5rem; /* 24px */
+    margin: 0.625rem; /* 10px */
+}
+
+#heading {
     display: none;
     justify-content: space-between;
     align-items: center;
@@ -32,7 +40,7 @@ h1{
     justify-content: flex-end;
 }
 
-#main,#question-container,#result-container{
+#main, #question-container, #result-container {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -42,42 +50,42 @@ h1{
 }
 
 #logo {
-    width: 367px;
-    height: 320px;
+    width: 22.9375rem; /* 367px */
+    height: 20rem; /* 320px */
 }
 
 button {
-    height: 43px;
-    width: 206px;
+    height: 2.7rem; /* 43px */
+    width: 12.875rem; /* 206px */
     background: #7ACC8C;
     font-weight: bold;
-    font-size: 20px;
+    font-size: 1.25rem; /* 20px */
     color: #ffffff;
-    margin-top: 20px;
-    border-radius: 18px;
-
+    margin-top: 1rem; /* 20px */
+    border-radius: 1.125rem; /* 18px */
 }
 
-.selected{
-    border: 2px solid #7ACC8C ;
+#selected {
+    border: 0.125rem solid #382daf; /* 2px */
 }
 
-#options > button{
+#options > button {
     display: flex;
     justify-content: center;
     align-content: center;
     background: none;
-    border: 2px solid #A6C1C7;
-    border-radius: 10px;
-    height: 40px;
+    border: 0.125rem solid #A6C1C7; /* 2px */
+    border-radius: 0.625rem; /* 10px */
+    height: 2.8rem; /* 40px */
     width: 60%;
-    margin: 20px auto;
-    padding: 8px;
+    margin: 1.25rem auto; /* 20px */
+    padding: 0.5rem; /* 8px */
     font-family: poppins, serif;
     color: black;
+    font-weight: normal;
 }
 
-#options{
+#options {
     width: 100%;
     text-align: center;
 }
@@ -86,6 +94,26 @@ button {
     display: none;
 }
 
-#result-container > h2{
-    font-size: 32px;
+#result-container > h2 {
+    font-size: 2rem; /* 32px */
+}
+
+#queNum {
+    display: inline;
+}
+
+#score {
+    display: inline;
+    font-size: 1.25rem; /* 20px */
+}
+
+#question {
+    font-size: 1.5rem; /* 24px */
+}
+
+.reslt {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%; 
+    text-align: left;
 }

@@ -26,8 +26,39 @@ const questionsArr = [
         question: 'What does WWW stands for ?', answer: 'World Wide Web',
         options: ['Web World Wide', 'World Wide Web', 'Web Wide World']
     },
-]
+];
 
+data = [
+    {
+        id: 1,
+        question: "What is the capital of France?",
+        options: [
+            { id: 'a', text: "Paris" },
+            { id: 'b', text: "London" },
+            { id: 'c', text: "Berlin" }
+        ],
+        answer: 'a',
+        type: 'multiple_choice'
+    },
+    {
+        id: 2,
+        question: "Which of the following are programming languages?",
+        options: [
+            { id: 'a', text: "Python" },
+            { id: 'b', text: "Mercury" },
+            { id: 'c', text: "Java" },
+            { id: 'd', text: "Venus" }
+        ],
+        answer: ['a', 'c'],
+        type: 'multiple_answer'
+    },
+    {
+        id: 3,
+        question: "True or False: The coffee is originally from Brazil.",
+        type: "true_false",
+        answer: "False"
+    }
+];
 
 let currentQuestion = 0;
 let score = 0;
@@ -51,8 +82,11 @@ const showQuestion = () => {
         btn.textContent = option;
         btn.classList.add('btn');
         btn.addEventListener('click', () => {
+            document.querySelectorAll('#options .btn').forEach(button => {
+                button.style.borderColor = '';
+            });
             selectedAnswer = option;
-            btn.classList.add('selected')
+            btn.style.borderColor = '#7ACC8C';
         });
         options.appendChild(btn);
     })
@@ -63,12 +97,12 @@ const next = () => {
 
     if (selectedAnswer === '') {
         alert("please select an answer")
-        return;
-    } 
-     if (selectedAnswer === current.answer) {
+        return
+    }
+    if (selectedAnswer === current.answer) {
         score++;
     }
-        currentQuestion++;
+    currentQuestion++;
     if (currentQuestion < questionsArr.length) {
         showQuestion();
     } else {
