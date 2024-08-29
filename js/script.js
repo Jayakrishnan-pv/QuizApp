@@ -13,41 +13,66 @@ const questionsArr = [
     {
         id: 1,
         question: 'What does HTML stands for ?',
-        answer: 'Hyper Text Markup Language',
-        options: ['Hyper Text Preprocessor', 'Hyper Text Markup Language', 'Hyper Text Multiple Language'],
+        options: [
+            { id: 'a', text: 'Hyper Text Preprocessor' },
+            { id: 'b', text: 'Hyper Text Markup Language' },
+            { id: 'c', text: 'Hyper Text Multiple Language' }
+        ],
+        answer: 'b',
         type: 'multiple_choice'
-    }, {
+    },
+    {
         id: 2,
         question: 'What does CSS stands for ?',
-        answer: 'Cascading Style Sheets',
-        options: ['Cascading Style Sheets', 'Cascading Sheets Style ', 'Cascading Style Shape'],
+        options: [
+            {id:'a', text: 'Cascading Style Sheets'}, 
+            {id:'b', text:'Cascading Sheets Style '}, 
+            {id:'c', text:'Cascading Style Shape'}
+        ],
+        answer: 'a',
         type: 'multiple_choice'
-    }, {
+    },
+    {
         id: 3,
         question: 'What does JS stands for ?',
-        answer: 'Javascript',
-        options: ['Java Style', 'Json Script', 'Javascript'],
+        options: [
+            {id:'a', text: 'Json Script'}, 
+            {id:'b', text: 'Javascript'},
+            {id:'c', text: 'Java Style'},
+            
+        ],
+        answer: 'b',
         type: 'multiple_choice'
-    }, {
+    },
+    {
         id: 4,
         question: 'What does URL stands for ?',
-        answer: 'Uniform Resource Locator',
-        options: ['Uniform Resource Location', 'Unit Resource Locator', 'Uniform Resource Locator'],
+        options: [
+            {id:'a', text: 'Uniform Resource Location'},
+            {id:'a', text: 'Unit Resource Locator'}, 
+            {id:'a', text: 'Uniform Resource Locator'}
+        ],
+        answer: 'a',
         type: 'multiple_choice'
-    }, {
+    }, 
+    {
         id: 5,
         question: 'What does WWW stands for ?',
-        answer: 'World Wide Web',
-        options: ['Web World Wide', 'World Wide Web', 'Web Wide World'],
+        options: [
+            {id:'a', text: 'Web World Wide'}, 
+            {id:'b', text: 'World Wide Web'}, 
+            {id:'c', text: 'Web Wide World'}
+        ],
+        answer: 'b',
         type: 'multiple_choice'
     },
     {
         id: 6,
         question: "What is the capital of France?",
         options: [
-            {id: 'a', text: "Paris"},
-            {id: 'b', text: "London"},
-            {id: 'c', text: "Berlin"}
+            { id: 'a', text: "Paris" },
+            { id: 'b', text: "London" },
+            { id: 'c', text: "Berlin" }
         ],
         answer: 'a',
         type: 'multiple_choice'
@@ -56,10 +81,10 @@ const questionsArr = [
         id: 7,
         question: "Which of the following are programming languages?",
         options: [
-            {id: 'a', text: "Python"},
-            {id: 'b', text: "Mercury"},
-            {id: 'c', text: "Java"},
-            {id: 'd', text: "Venus"}
+            { id: 'a', text: "Python" },
+            { id: 'b', text: "Mercury" },
+            { id: 'c', text: "Java" },
+            { id: 'd', text: "Venus" }
         ],
         answer: ['a', 'c'],
         type: 'multiple_answer'
@@ -123,15 +148,15 @@ const selectAnswer = (btn, type) => {
 const next = () => {
     const current = questionsArr[currentQuestion];
 
-    if (selectedAnswers.length === 0) {
-        alert("Please select an answer");
-        return;
-    }
+    // if (selectedAnswers.length === 0) {
+    //     alert("Please select an answer");
+    //     return;
+    // }
 
     if (current.type === 'multiple_choice' || current.type === 'true_false') {
         if (selectedAnswers[0] === current.answer) score++;
     } else if (current.type === 'multiple_answer') {
-        if (JSON.parse(selectedAnswers.sort()) === JSON.parse(current.answer.sort())) score++;
+        if (JSON.stringify(selectedAnswers.sort()) === JSON.stringify(current.answer.sort())) score++;
     }
 
     currentQuestion++;
