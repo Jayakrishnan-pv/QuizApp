@@ -131,7 +131,7 @@ const next = () => {
     if (current.type === 'multiple_choice' || current.type === 'true_false') {
         if (selectedAnswers[0] === current.answer) score++;
     } else if (current.type === 'multiple_answer') {
-        if (JSON.parse(selectedAnswers.sort()) === JSON.parse(current.answer.sort())) score++;
+        if (JSON.stringify(selectedAnswers.sort()) === JSON.stringify(current.answer.sort())) score++;
     }
 
     currentQuestion++;
