@@ -1,12 +1,15 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
     font-family: Domine, serif;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    width: 100vw;
     margin: 0;
-
 }
 
 .heading1 {
@@ -31,25 +34,22 @@ body {
     display: none;
     justify-content: space-between;
     align-items: center;
-    width: 90%;
-}
-
-.heading h2:first-child {
-    justify-content: flex-start;
-}
-
-.heading h2:last-child {
-    justify-content: flex-end;
+    margin: 3rem 3rem 0 3rem;
 }
 
 #main, #question-container, #result-container {
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 80vh;
     width: 100vw;
+    gap: 4rem;
+}
 
+#main, #result-container{
+    justify-content: center;
+    gap: 3rem;
 }
 
 #logo {
@@ -114,12 +114,28 @@ button {
     font-size: 1.5rem; 
 }
 
-.reslt {
-    display: flex;
-    justify-content: flex-start;
-    width: 100%;
-    text-align: left;
-    margin-left: 60px;
+#totalQue,#totalScore{
+    display: inline;
+}
+
+.text-input{
+    border: 0.125rem solid #A6C1C7;
+    border-radius: 0.625rem;
+    height: 2.3rem;
+    width: 23rem;
+    margin: 1.25rem auto;
+    padding: 0.5rem;
+    font-family: poppins, serif;
+    color: black;
+    font-size: 1.25rem;
+    font-weight: normal;
+}
+
+#timer{
+    font-family: poppins, serif;
+    font-size: 1.25rem;
+    margin: 0;
+    padding: 0;
 }
 
 @media (max-width: 800px) {
