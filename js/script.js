@@ -14,6 +14,7 @@ const timerDisplay = document.getElementById('timer');
 const hint = document.getElementById('hint');
 const queDiv = document.getElementById('queDiv');
 
+
 const quizElements = {
     currentQuestion: 0,
     score: 0,
@@ -209,10 +210,37 @@ const uiUpdates = {
 
     updateTimerDisplay: () => {
         timerDisplay.textContent = `${quizElements.timeLeft} seconds remaining`;
+    },
+
+    highlightAnswer: (currentQuestion) => {
+        if (currentQuestion.type === questionType.textInput) {
+            const input = document.querySelector('.text-input');
+            if (quizElements.selectedAnswers[0].toLowerCase() === currentQuestion.answer.toLowerCase()) {
+                input.style.borderColor = '#12d338';
+            } else {
+                input.style.borderColor = 'red';
+            }
+        } else {
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(button => {
+                if (currentQuestion.answer.includes(button.dataset.id)) {
+                    button.style.borderColor = '#12d338';
+                } else if (quizElements.selectedAnswers.includes(button.dataset.id)) {
+                    button.style.borderColor = 'red';
+                } else if (currentQuestion.type === questionType.multipleAnswer) {
+                    if (currentQuestion.answer.includes(button.dataset.id)) {
+                        button.style.borderColor = '#12d338';
+                    } else if (quizElements.selectedAnswers.includes(button.dataset.id)) {
+                        button.style.borderColor = 'red'; 
+                    }
+                }
+            });
+        }
     }
 };
 
 const quizLogic = {
+
     handleOptionClick: (btn, type) => {
         if (type === questionType.multipleChoice || type === questionType.trueFalse) {
             quizLogic.handleSingleSelection(btn);
@@ -224,7 +252,7 @@ const quizLogic = {
     handleSingleSelection: (btn) => {
         quizLogic.clearButtonStyles();
         quizElements.selectedAnswers = [btn.dataset.id];
-        btn.style.borderColor = 'red';
+        btn.style.borderColor = '#12d338';
     },
 
     handleMultipleSelection: (btn) => {
@@ -234,7 +262,7 @@ const quizLogic = {
             btn.style.borderColor = '';
         } else if (quizElements.selectedAnswers.length < 2) {
             quizElements.selectedAnswers.push(btn.dataset.id);
-            btn.style.borderColor = 'red';
+            btn.style.borderColor = '#12d338';
         } else {
             alert('Please select 2 answers');
         }
@@ -247,6 +275,7 @@ const quizLogic = {
     },
 
     nextQuestion: () => {
+
         const currentQuestion = quizElements.questionsArr[quizElements.currentQuestion];
         if (currentQuestion.type === questionType.textInput) {
             quizLogic.handleTextInputAnswer();
@@ -255,7 +284,15 @@ const quizLogic = {
             return;
         }
         quizLogic.updateScore(currentQuestion);
-        quizLogic.moveToNextQuestion();
+        uiUpdates.highlightAnswer(currentQuestion);
+        const isCorrect = quizElements.selectedAnswers.some(answer => currentQuestion.answer.includes(answer));
+        if (isCorrect) {
+            quizLogic.moveToNextQuestion()
+        } else {
+            setTimeout(() => {
+                quizLogic.moveToNextQuestion()
+            }, 500)
+        }
     },
 
     handleTextInputAnswer: () => {
@@ -296,7 +333,7 @@ const quizLogic = {
             quizElements.score++;
         }
     },
-    
+
     startTimer: () => {
         quizElements.timeLeft = quizElements.time;
         uiUpdates.updateTimerDisplay();
@@ -308,7 +345,7 @@ const quizLogic = {
                 clearInterval(quizElements.timerInterval);
                 quizLogic.moveToNextQuestion();
             }
-        }, 1000);
+        }, 500);
     },
 
     moveToNextQuestion: () => {
