@@ -1,0 +1,312 @@
+# Quiz Application Code Explanation
+
+## Element Selection
+```javascript
+const startBtn = document.getElementById('start-button');
+const nextBtn = document.getElementById('next-button');
+const main = document.getElementById('main');
+const questionContainer = document.getElementById('question-container');
+const resultContainer = document.getElementById('result-container');
+const heading = document.getElementById('heading');
+const questionEle = document.getElementById('question');
+const options = document.getElementById('options');
+const questionNum = document.getElementById('queNum');
+const finalScore = document.getElementById('score');
+const totalQuestion = document.getElementById('totalQue');
+const totalScore = document.getElementById('totalScore');
+const timerDisplay = document.getElementById('timer');
+const hint = document.getElementById('hint');
+const queDiv = document.getElementById('queDiv');
+```
+These lines select various HTML elements using their IDs. These elements will be manipulated throughout the quiz application.
+
+## Quiz Data Structure
+```javascript
+const quizElements = {
+    currentQuestion: 0,
+    score: 0,
+    selectedAnswers: [],
+    totalScore: 10,
+    time: 5,
+    questionsArr: [
+        // Array of question objects
+    ],
+};
+```
+This object stores the current state of the quiz, including the current question index, score, selected answers, total possible score, time limit per question, and an array of question objects.
+
+## Question Types Enum
+```javascript
+const questionType = {
+    multipleChoice: 'multiple_choice',
+    multipleAnswer: 'multiple_answer',
+    trueFalse: 'true_false',
+    textInput: 'text_input'
+};
+```
+This object defines the different types of questions available in the quiz.
+
+## UI Updates Object
+```javascript
+const uiUpdates = {
+    // Various UI update functions
+};
+```
+This object contains methods for updating the user interface of the quiz application.
+
+### initQuiz Function
+```javascript
+initQuiz: () => {
+    uiUpdates.showMainElements();
+    uiUpdates.renderQuestion();
+},
+```
+This function initializes the quiz by showing the main elements and rendering the first question.
+
+### showMainElements Function
+```javascript
+showMainElements: () => {
+    questionContainer.style.display = 'flex';
+    heading.style.display = 'flex';
+    main.style.display = 'none';
+},
+```
+This function shows the question container and heading while hiding the main element.
+
+### renderQuestion Function
+```javascript
+renderQuestion: () => {
+    const currentQuestion = quizElements.questionsArr[quizElements.currentQuestion];
+    uiUpdates.displayQuestionText(currentQuestion);
+    uiUpdates.clearOptions();
+    uiUpdates.renderOptions(currentQuestion);
+    uiUpdates.updateQuestionCount();
+    quizLogic.startTimer();
+},
+```
+This function renders the current question, including its text, options, and starts the timer.
+
+### displayQuestionText Function
+```javascript
+displayQuestionText: (currentQuestion) => {
+    questionEle.textContent = `${currentQuestion.id}. ${currentQuestion.question}`;
+    hint.textContent = currentQuestion.hint;
+    questionNum.textContent = currentQuestion.id;
+},
+```
+This function displays the question text, hint, and question number.
+
+### clearOptions Function
+```javascript
+clearOptions: () => {
+    options.innerHTML = '';
+},
+```
+This function clears any existing options from the options container.
+
+### renderOptions Function
+```javascript
+renderOptions: (currentQuestion) => {
+    quizElements.selectedAnswers = [];
+    if (currentQuestion.type === questionType.textInput) {
+        uiUpdates.renderTextInput();
+    } else {
+        const shuffledOptions = quizLogic.shuffleOptions([...currentQuestion.options]);
+        uiUpdates.renderOptionButtons(shuffledOptions, currentQuestion.type);
+    }
+},
+```
+This function renders the appropriate input type for the current question (text input or option buttons).
+
+### renderTextInput Function
+```javascript
+renderTextInput: () => {
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.classList.add('text-input');
+    options.appendChild(input);
+},
+```
+This function creates and appends a text input element for text input questions.
+
+### renderOptionButtons Function
+```javascript
+renderOptionButtons: (optionList, type) => {
+    optionList.forEach(option => {
+        const btn = uiUpdates.createOptionButton(option);
+        btn.addEventListener('click', () => quizLogic.handleOptionClick(btn, type));
+        options.appendChild(btn);
+    });
+},
+```
+This function creates and appends option buttons for multiple choice, multiple answer, and true/false questions.
+
+### createOptionButton Function
+```javascript
+createOptionButton: (option) => {
+    const btn = document.createElement('button');
+    btn.textContent = option.text || option;
+    btn.classList.add('btn');
+    btn.dataset.id = option.id || option;
+    return btn;
+},
+```
+This function creates a button element for an option.
+
+### updateQuestionCount Function
+```javascript
+updateQuestionCount: () => {
+    totalQuestion.textContent = quizElements.questionsArr.length;
+},
+```
+This function updates the total question count display.
+
+### showResults Function
+```javascript
+showResults: () => {
+    questionContainer.style.display = 'none';
+    resultContainer.style.display = 'flex';
+    queDiv.style.display = 'none';
+    finalScore.textContent = quizElements.score;
+    totalScore.textContent = quizElements.totalScore;
+},
+```
+This function displays the final results of the quiz.
+
+### updateTimerDisplay Function
+```javascript
+updateTimerDisplay: () => {
+    timerDisplay.textContent = `${quizElements.timeLeft} seconds remaining`;
+},
+```
+This function updates the timer display.
+
+### highlightAnswer Function
+```javascript
+highlightAnswer: (currentQuestion) => {
+    // Logic to highlight correct and incorrect answers
+},
+```
+This function highlights the correct answer and the user's selection after answering a question.
+
+## Quiz Logic Object
+```javascript
+const quizLogic = {
+    // Various quiz logic functions
+};
+```
+This object contains methods for handling the logic of the quiz application.
+
+### handleOptionClick Function
+```javascript
+handleOptionClick: (btn, type) => {
+    if (type === questionType.multipleChoice || type === questionType.trueFalse) {
+        quizLogic.handleSingleSelection(btn);
+    } else if (type === questionType.multipleAnswer) {
+        quizLogic.handleMultipleSelection(btn);
+    }
+},
+```
+This function handles user clicks on option buttons, delegating to appropriate handlers based on question type.
+
+### handleSingleSelection Function
+```javascript
+handleSingleSelection: (btn) => {
+    quizLogic.clearButtonStyles();
+    quizElements.selectedAnswers = [btn.dataset.id];
+    btn.style.borderColor = '#12d338';
+},
+```
+This function handles selection for single-answer questions.
+
+### handleMultipleSelection Function
+```javascript
+handleMultipleSelection: (btn) => {
+    // Logic for handling multiple selections
+},
+```
+This function handles selection for multiple-answer questions.
+
+### clearButtonStyles Function
+```javascript
+clearButtonStyles: () => {
+    document.querySelectorAll('.btn').forEach(button => {
+        button.style.borderColor = '';
+    });
+},
+```
+This function clears the styles of all option buttons.
+
+### nextQuestion Function
+```javascript
+nextQuestion: () => {
+    // Logic for moving to the next question
+},
+```
+This function handles the logic for moving to the next question, including answer checking and score updating.
+
+### handleTextInputAnswer Function
+```javascript
+handleTextInputAnswer: () => {
+    const input = document.querySelector('.text-input');
+    if (!input.value) {
+        alert('Please enter an answer');
+        return;
+    }
+    quizElements.selectedAnswers = [input.value.trim()];
+},
+```
+This function handles answers for text input questions.
+
+### updateScore Function
+```javascript
+updateScore: (currentQuestion) => {
+    // Logic for updating the score based on question type
+},
+```
+This function updates the score based on the user's answer and question type.
+
+### startTimer Function
+```javascript
+startTimer: () => {
+    // Logic for starting and managing the timer
+},
+```
+This function starts and manages the timer for each question.
+
+### autoSubmit Function
+```javascript
+autoSubmit: () => {
+    // Logic for auto-submitting when time runs out
+},
+```
+This function automatically submits the current answer when the timer runs out.
+
+### moveToNextQuestion Function
+```javascript
+moveToNextQuestion: () => {
+    clearInterval(quizElements.timerInterval);
+    quizElements.currentQuestion++;
+    if (quizElements.currentQuestion < quizElements.questionsArr.length) {
+        uiUpdates.renderQuestion();
+    } else {
+        uiUpdates.showResults();
+    }
+},
+```
+This function moves to the next question or shows results if all questions have been answered.
+
+### shuffleOptions Function
+```javascript
+shuffleOptions: (options) => {
+    // Logic for shuffling options
+},
+```
+This function shuffles the options for a question to randomize their order.
+
+## Event Listeners
+```javascript
+startBtn.addEventListener('click', () => uiUpdates.initQuiz());
+nextBtn.addEventListener('click', () => quizLogic.nextQuestion());
+```
+These lines add event listeners to the start and next buttons, triggering the appropriate functions when clicked.
