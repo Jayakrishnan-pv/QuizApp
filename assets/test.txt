@@ -1,0 +1,284 @@
+const fs = require('fs');
+let uiUpdates, quizLogic, quizElements;
+
+beforeEach(() => {
+const html = fs.readFileSync('./index.html', 'utf8');
+document.documentElement.innerHTML = html;
+({uiUpdates, quizLogic, quizElements} = require('../js/script'));
+quizElements.questionsArr = [
+{
+id: 1,
+question: "What does HTML stand for?",
+options: ["Hyper Text Markup Language", "Home Tool Markup Language", "Hyperlinks and Text Markup Language"],
+answer: 0,
+hint: "It's a markup language."
+}
+];
+quizElements.currentQuestion = 0;
+});
+
+test('should initialize the quiz and update the DOM elements correctly', () => {
+const questionContainer = document.getElementById('question-container');
+const heading = document.getElementById('heading');
+const main = document.getElementById('main');
+uiUpdates.initQuiz();
+expect(questionContainer.style.display).toBe('flex');
+expect(heading.style.display).toBe('flex');
+expect(main.style.display).toBe('none');
+});
+
+
+test('should render the correct question along with its options', () => {
+uiUpdates.renderQuestion();
+
+    const currentQuestion = quizElements.questionsArr[quizElements.currentQuestion];
+    const questionEle = document.getElementById('question').textContent;
+    const options = document.getElementById('options').children;
+    const questionNum = document.getElementById('queNum').textContent;
+    const hintText = document.getElementById('hint').textContent;
+
+    expect(questionEle).toBe(`${currentQuestion.id}. ${currentQuestion.question}`);
+    expect(questionNum).toBe(currentQuestion.id.toString());
+    expect(hintText).toBe(currentQuestion.hint);
+    expect(options.length).toBe(currentQuestion.options.length);
+
+    for (let i = 0; i < options.length; i++) {
+        expect(options[i].textContent).toEqual(currentQuestion.options[i]);
+    }
+});
+
+--------------------------------------------------------------------------------------------------
+version - 2
+--------------------------------------------------------------------------------------------------
+beforeEach(() => {
+    document.body.innerHTML =
+        `<div id="main" style="display: block;">Main Menu</div>
+         <div id="heading" style="display: none;">Quiz Heading</div>
+         <div id="question-container" style="display: none;">Questions</div>
+         <div id="options"></div>
+         <div id="question"></div>
+         <div id="queNum"></div>
+         <div id="result-container" style="display: none;">Results</div>
+         <div id="queDiv" style="display: block;"></div>
+         <span id="score"></span>
+         <span id="totalScore"></span>`;
+
+    global.quizElements = {
+        currentQuestion: 0,
+        questionsArr: [
+            {
+                id: 1,
+                question: 'What does HTML stand for?',
+                options: [
+                    { id: 'a', text: 'Hyper Text Markup Language' },
+                    { id: 'b', text: 'Hyper Text Processor' }
+                ]
+            }
+        ]
+    };
+    global.uiUpdates = {
+        initQuiz: () => {
+            uiUpdates.showMainElements();
+            uiUpdates.renderQuestion();
+        },
+        showMainElements: () => {
+            document.getElementById('main').style.display = 'none';
+            document.getElementById('question-container').style.display = 'flex';
+            document.getElementById('heading').style.display = 'flex';
+        },
+        renderQuestion: () => {
+            const currentQuestion = quizElements.questionsArr[quizElements.currentQuestion];
+            document.getElementById('question').textContent = `${currentQuestion.id}. ${currentQuestion.question}`;
+            document.getElementById('queNum').textContent = currentQuestion.id;
+            const optionsDiv = document.getElementById('options');
+            optionsDiv.innerHTML = '';
+            currentQuestion.options.forEach(option => {
+                const btn = document.createElement('button');
+                btn.textContent = option.text;
+                optionsDiv.appendChild(btn);
+            });
+        },
+        clearOptions: () => {
+            const optionsDiv = document.getElementById('options');
+            optionsDiv.innerHTML = '';
+        },
+        showResults: () => {
+            document.getElementById('question-container').style.display = 'none';
+            document.getElementById('result-container').style.display = 'flex';
+            document.getElementById('queDiv').style.display = 'none';
+            document.getElementById('score').textContent = quizElements.score.toString();
+            document.getElementById('totalScore').textContent = quizElements.totalScore.toString();
+        }
+    };
+});
+describe('uiUpdates.initQuiz', () => {
+    test('should initialize the quiz and update the DOM elements correctly', () => {
+
+        const main = document.getElementById('main');
+        const questionContainer = document.getElementById('question-container');
+        const heading = document.getElementById('heading');
+        const questionEle = document.getElementById('question');
+        const queNum = document.getElementById('queNum');
+        const optionsDiv = document.getElementById('options');
+
+        uiUpdates.initQuiz();
+        expect(main.style.display).toBe('none');
+        expect(questionContainer.style.display).toBe('flex');
+        expect(heading.style.display).toBe('flex');
+        expect(questionEle.textContent).toBe('1. What does HTML stand for?');
+        expect(queNum.textContent).toBe('1');
+        expect(optionsDiv.children.length).toBe(2);
+        expect(optionsDiv.children[0].textContent).toBe('Hyper Text Markup Language');
+        expect(optionsDiv.children[1].textContent).toBe('Hyper Text Processor');
+    });
+});
+
+describe('uiUpdates.renderQuestion', () => {
+    test('should render the correct question along with its options', () => {
+        uiUpdates.renderQuestion();
+
+        const currentQuestion = quizElements.questionsArr[quizElements.currentQuestion];
+        const questionEle = document.getElementById('question').textContent;
+        const options = document.getElementById('options').children;
+        const questionNum = document.getElementById('queNum').textContent;
+
+        expect(questionEle).toEqual(`${currentQuestion.id}. ${currentQuestion.question}`);
+        expect(questionNum).toEqual(currentQuestion.id.toString());
+        expect(options.length).toBe(currentQuestion.options.length);
+
+        for (let i = 0; i < options.length; i++) {
+            expect(options[i].textContent).toEqual(currentQuestion.options[i].text);
+        }
+    });
+});
+
+describe('uiUpdates.clearOptions', () => {
+    test('should clear all previously rendered options', () => {
+        const optionsDiv = document.getElementById('options');
+        const option1 = document.createElement('button');
+        const option2 = document.createElement('button');
+        optionsDiv.appendChild(option1);
+        optionsDiv.appendChild(option2);
+
+        expect(optionsDiv.children.length).toBe(2);
+
+        uiUpdates.clearOptions();
+        expect(optionsDiv.children.length).toBe(0);
+    });
+});
+
+describe('uiUpdates.showResults', () => {
+    test('should display the results screen with the correct score', () => {
+        // Set up initial state
+        quizElements.score = 5;
+        quizElements.totalScore = 10;
+
+        uiUpdates.showResults();
+        expect(document.getElementById('question-container').style.display).toBe('none');
+        expect(document.getElementById('result-container').style.display).toBe('flex');
+        expect(document.getElementById('queDiv').style.display).toBe('none');
+        expect(document.getElementById('score').textContent).toBe('5');
+        expect(document.getElementById('totalScore').textContent).toBe('10');
+    });
+});
+
+### QuizLogic
+
+beforeEach(() => {
+    document.body.innerHTML = `
+        <div id="main" style="display: block;">Main Menu</div>
+        <div id="heading" style="display: none;">Quiz Heading</div>
+        <div id="question-container" style="display: none;">Questions</div>
+        <div id="options"></div>
+        <div id="question"></div>
+        <div id="queNum"></div>
+        <div id="result-container" style="display: none;">Results</div>
+        <div id="queDiv" style="display: block;"></div>
+        <span id="score"></span>
+        <span id="totalScore"></span>`;
+
+    global.quizElements = {
+        currentQuestion: 0,
+        questionsArr: [
+            {
+                id: 1,
+                question: 'What does HTML stand for?',
+                options: [
+                    { id: 'a', text: 'Hyper Text Markup Language' },
+                    { id: 'b', text: 'Hyper Text Processor' }
+                ],
+                type: 'multiple_choice'
+            }
+        ],
+        selectedAnswers: []
+    };
+
+    global.quizLogic = {
+        handleOptionClick: (optionId) => {
+            const currentQuestion = quizElements.questionsArr[quizElements.currentQuestion];
+            if (currentQuestion.type === 'multiple_choice' || currentQuestion.type === 'true_false') {
+                quizElements.selectedAnswers = [optionId];
+            } else if (currentQuestion.type === 'multiple_answer') {
+                if (quizElements.selectedAnswers.includes(optionId)) {
+                    quizElements.selectedAnswers = quizElements.selectedAnswers.filter(id => id !== optionId);
+                } else if (quizElements.selectedAnswers.length < 2) {
+                    quizElements.selectedAnswers.push(optionId);
+                } else {
+                    alert('You can only select up to 2 answers.');
+                }
+            }
+        }
+    };
+});
+
+describe('quizLogic.handleOptionClick', () => {
+    test('should update selected answer for multiple_choice question', () => {
+        const optionId = 'a';
+        quizLogic.handleOptionClick(optionId);
+        expect(quizElements.selectedAnswers).toEqual([optionId]);
+    });
+
+    test('should update selected answer for true_false question', () => {
+        quizElements.questionsArr[0].type = 'true_false';
+        const optionId = 'b';
+        quizLogic.handleOptionClick(optionId);
+        expect(quizElements.selectedAnswers).toEqual([optionId]);
+    });
+
+    test('should update selected answers for multiple_answer question', () => {
+        quizElements.questionsArr[0].type = 'multiple_answer';
+        const optionId1 = 'a';
+        const optionId2 = 'b';
+        quizLogic.handleOptionClick(optionId1);
+        quizLogic.handleOptionClick(optionId2);
+        expect(quizElements.selectedAnswers).toEqual([optionId1, optionId2]);
+    });
+
+    test('should not allow more than 2 answers for multiple_answer question', () => {
+        quizElements.questionsArr[0].type = 'multiple_answer';
+        const optionId1 = 'a';
+        const optionId2 = 'b';
+        const optionId3 = 'c';
+        quizLogic.handleOptionClick(optionId1);
+        quizLogic.handleOptionClick(optionId2);
+        quizLogic.handleOptionClick(optionId3);
+        expect(quizElements.selectedAnswers).toEqual([optionId1, optionId2]);
+    });
+});
+
+describe('quizLogic.handleSingleSelection', () => {
+    test('should update selected answer and highlight it', () => {
+        const optionsDiv = document.getElementById('options');
+        const option1 = document.createElement('button');
+        option1.id = 'a';
+        const option2 = document.createElement('button');
+        option2.id = 'b';
+        optionsDiv.appendChild(option1);
+        optionsDiv.appendChild(option2);
+
+        quizLogic.handleSingleSelection('a');
+        expect(quizElements.selectedAnswers).toEqual(['a']);
+        expect(option1.style.borderColor).toBe('green');
+        expect(option2.style.borderColor).toBe('initial');
+    });
+});
