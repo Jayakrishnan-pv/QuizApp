@@ -8,6 +8,8 @@ const {
     handleOptionClick,
     nextQuestion,
     updateScore,
+    checkSingleAnswer,
+    checkMultipleAnswers,
     startTimer,
     autoSubmit,
     shuffleOptions,
@@ -102,6 +104,20 @@ test('updateScore should update score for multiple_answer question correctly', (
     quizElements.selectedAnswers = ['a', 'c'];
     updateScore(questionsArr[6]);
     expect(quizElements.score).toBe(2);
+});
+
+test('checkSingleAnswer should validate single-choice answer correctly', () => {
+    quizElements.selectedAnswers = ['b'];
+    const currentQuestion = questionsArr[0];
+    checkSingleAnswer(currentQuestion);
+    expect(quizElements.score).toBe(1);
+});
+
+test('checkMultipleAnswers should validate multiple-choice answers correctly', () => {
+    quizElements.selectedAnswers = ['a', 'd'];
+    const currentQuestion = questionsArr[6];
+    checkMultipleAnswers(currentQuestion);
+    expect(quizElements.score).toBe(1);
 });
 
 test('shuffleOptions should shuffle the options array', () => {

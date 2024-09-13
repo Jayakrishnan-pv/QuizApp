@@ -47,6 +47,14 @@ body {
     gap: 4rem;
 }
 
+.question-sub {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-direction: column;
+    gap: 3rem;
+}
+
 #main, #result-container {
     justify-content: center;
     gap: 3rem;
@@ -118,6 +126,14 @@ button {
     display: inline;
 }
 
+.hide {
+    display: none;
+}
+
+.display-flex {
+    display: flex;
+}
+
 .text-input {
     border: 0.125rem solid #A6C1C7;
     border-radius: 0.625rem;
@@ -144,9 +160,10 @@ button {
     'GRAD' 200,
     'opsz' 24
 }
-.time-icon{
+
+.time-icon {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
     align-items: center;
 }
 
@@ -163,7 +180,7 @@ button {
 
     button {
         width: 10rem;
-        font-size: 1rem;
+        font-size: 1.5rem;
     }
 
     #options > button {
@@ -171,7 +188,7 @@ button {
     }
 
     #question {
-        font-size: 1.25rem;
+        font-size: 1.5rem;
     }
 
     #result-container > h2 {
@@ -192,6 +209,10 @@ button {
         width: 90vw;
     }
 
+    #question-container {
+        gap: 3rem;
+    }
+
     #logo {
         width: 14rem;
         height: 12rem;
@@ -199,7 +220,7 @@ button {
 
     button {
         width: 8rem;
-        font-size: 0.875rem;
+        font-size: 1rem;
     }
 
     #options > button {
@@ -207,7 +228,7 @@ button {
     }
 
     #question {
-        font-size: 1rem;
+        font-size: 1.25rem;
     }
 
     #result-container > h2 {
