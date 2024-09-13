@@ -1,26 +1,9 @@
-const startBtn = document.getElementById('start-button');
-const nextBtn = document.getElementById('next-button');
-const main = document.getElementById('main');
-const questionContainer = document.getElementById('question-container');
-const resultContainer = document.getElementById('result-container');
-const heading = document.getElementById('heading');
-const questionEle = document.getElementById('question');
-const options = document.getElementById('options');
-const questionNum = document.getElementById('queNum');
-const finalScore = document.getElementById('score');
-const totalQuestion = document.getElementById('totalQue');
-const totalScore = document.getElementById('totalScore');
-const timerDisplay = document.getElementById('timer');
-const hint = document.getElementById('hint');
-const queDiv = document.getElementById('queDiv');
-
-
 const quizElements = {
     currentQuestion: 0,
     score: 0,
     selectedAnswers: [],
     totalScore: 10,
-    time: 60,
+    time: 10,
     questionsArr: [
         {
             id: 1,
@@ -125,13 +108,6 @@ const quizElements = {
     ],
 };
 
-const questionType = {
-    multipleChoice: 'multiple_choice',
-    multipleAnswer: 'multiple_answer',
-    trueFalse: 'true_false',
-    textInput: 'text_input'
-};
-
 const uiUpdates = {
     initQuiz: () => {
         uiUpdates.showMainElements();
@@ -139,9 +115,12 @@ const uiUpdates = {
     },
 
     showMainElements: () => {
-        questionContainer.style.display = 'flex';
-        heading.style.display = 'flex';
-        main.style.display = 'none';
+        const questionContainer = document.getElementById('question-container');
+        const heading = document.getElementById('heading');
+        const main = document.getElementById('main');
+        if (questionContainer) questionContainer.style.display = 'flex';
+        if (heading) heading.style.display = 'flex';
+        if (main) main.style.display = 'none';
     },
 
     renderQuestion: () => {
@@ -154,18 +133,22 @@ const uiUpdates = {
     },
 
     displayQuestionText: (currentQuestion) => {
-        questionEle.textContent = `${currentQuestion.id}. ${currentQuestion.question}`;
-        hint.textContent = currentQuestion.hint;
-        questionNum.textContent = currentQuestion.id;
+        const questionEle = document.getElementById('question');
+        const hint = document.getElementById('hint');
+        const questionNum = document.getElementById('queNum');
+        if (questionEle) questionEle.textContent = `${currentQuestion.id}. ${currentQuestion.question}`;
+        if (hint) hint.textContent = currentQuestion.hint;
+        if (questionNum) questionNum.textContent = currentQuestion.id;
     },
 
     clearOptions: () => {
-        options.innerHTML = '';
+        const options = document.getElementById('options');
+        if (options) options.innerHTML = '';
     },
 
     renderOptions: (currentQuestion) => {
         quizElements.selectedAnswers = [];
-        if (currentQuestion.type === questionType.textInput) {
+        if (currentQuestion.type === 'text_input') {
             uiUpdates.renderTextInput();
         } else {
             const shuffledOptions = quizLogic.shuffleOptions([...currentQuestion.options]);
@@ -174,18 +157,24 @@ const uiUpdates = {
     },
 
     renderTextInput: () => {
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.classList.add('text-input');
-        options.appendChild(input);
+        const options = document.getElementById('options');
+        if (options) {
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.classList.add('text-input');
+            options.appendChild(input);
+        }
     },
 
     renderOptionButtons: (optionList, type) => {
-        optionList.forEach(option => {
-            const btn = uiUpdates.createOptionButton(option);
-            btn.addEventListener('click', () => quizLogic.handleOptionClick(btn, type));
-            options.appendChild(btn);
-        });
+        const options = document.getElementById('options');
+        if (options) {
+            optionList.forEach(option => {
+                const btn = uiUpdates.createOptionButton(option);
+                btn.addEventListener('click', () => quizLogic.handleOptionClick(btn, type));
+                options.appendChild(btn);
+            });
+        }
     },
 
     createOptionButton: (option) => {
@@ -197,28 +186,37 @@ const uiUpdates = {
     },
 
     updateQuestionCount: () => {
-        totalQuestion.textContent = quizElements.questionsArr.length;
+        const totalQuestion = document.getElementById('totalQue');
+        if (totalQuestion) totalQuestion.textContent = quizElements.questionsArr.length;
     },
 
     showResults: () => {
-        questionContainer.style.display = 'none';
-        resultContainer.style.display = 'flex';
-        queDiv.style.display = 'none';
-        finalScore.textContent = quizElements.score;
-        totalScore.textContent = quizElements.totalScore;
+        const questionContainer = document.getElementById('question-container');
+        const resultContainer = document.getElementById('result-container');
+        const queDiv = document.getElementById('queDiv');
+        const finalScore = document.getElementById('score');
+        const totalScore = document.getElementById('totalScore');
+        if (questionContainer) questionContainer.style.display = 'none';
+        if (resultContainer) resultContainer.style.display = 'flex';
+        if (queDiv) queDiv.style.display = 'none';
+        if (finalScore) finalScore.textContent = quizElements.score;
+        if (totalScore) totalScore.textContent = quizElements.totalScore;
     },
 
     updateTimerDisplay: () => {
-        timerDisplay.textContent = `${quizElements.timeLeft} seconds remaining`;
+        const timerDisplay = document.getElementById('timer');
+        if (timerDisplay) timerDisplay.textContent = `${quizElements.timeLeft}s remaining`;
     },
 
     highlightAnswer: (currentQuestion) => {
-        if (currentQuestion.type === questionType.textInput) {
+        if (currentQuestion.type === 'text_input') {
             const input = document.querySelector('.text-input');
-            if (quizElements.selectedAnswers[0].toLowerCase() === currentQuestion.answer.toLowerCase()) {
-                input.style.borderColor = '#12d338';
-            } else {
-                input.style.borderColor = 'red';
+            if (input) {
+                if (quizElements.selectedAnswers[0].toLowerCase() === currentQuestion.answer.toLowerCase()) {
+                    input.style.borderColor = '#12d338';
+                } else {
+                    input.style.borderColor = 'red';
+                }
             }
         } else {
             const buttons = document.querySelectorAll('.btn');
@@ -227,11 +225,11 @@ const uiUpdates = {
                     button.style.borderColor = '#12d338';
                 } else if (quizElements.selectedAnswers.includes(button.dataset.id)) {
                     button.style.borderColor = 'red';
-                } else if (currentQuestion.type === questionType.multipleAnswer) {
+                } else if (currentQuestion.type === 'multiple_answer') {
                     if (currentQuestion.answer.includes(button.dataset.id)) {
                         button.style.borderColor = '#12d338';
                     } else if (quizElements.selectedAnswers.includes(button.dataset.id)) {
-                        button.style.borderColor = 'red'; 
+                        button.style.borderColor = 'red';
                     }
                 }
             });
@@ -240,11 +238,10 @@ const uiUpdates = {
 };
 
 const quizLogic = {
-
     handleOptionClick: (btn, type) => {
-        if (type === questionType.multipleChoice || type === questionType.trueFalse) {
+        if (type === 'multiple_choice' || type === "true_false") {
             quizLogic.handleSingleSelection(btn);
-        } else if (type === questionType.multipleAnswer) {
+        } else if (type === 'multiple_answer') {
             quizLogic.handleMultipleSelection(btn);
         }
     },
@@ -252,7 +249,7 @@ const quizLogic = {
     handleSingleSelection: (btn) => {
         quizLogic.clearButtonStyles();
         quizElements.selectedAnswers = [btn.dataset.id];
-        btn.style.borderColor = '#12d338';
+        btn.style.borderColor = '#7ACC8C';
     },
 
     handleMultipleSelection: (btn) => {
@@ -262,7 +259,7 @@ const quizLogic = {
             btn.style.borderColor = '';
         } else if (quizElements.selectedAnswers.length < 2) {
             quizElements.selectedAnswers.push(btn.dataset.id);
-            btn.style.borderColor = '#12d338';
+            btn.style.borderColor = '#7ACC8C';
         } else {
             alert('Please select 2 answers');
         }
@@ -275,9 +272,8 @@ const quizLogic = {
     },
 
     nextQuestion: () => {
-
         const currentQuestion = quizElements.questionsArr[quizElements.currentQuestion];
-        if (currentQuestion.type === questionType.textInput) {
+        if (currentQuestion.type === 'text_input') {
             quizLogic.handleTextInputAnswer();
         } else if (quizElements.selectedAnswers.length === 0) {
             alert('Please select an answer');
@@ -285,31 +281,26 @@ const quizLogic = {
         }
         quizLogic.updateScore(currentQuestion);
         uiUpdates.highlightAnswer(currentQuestion);
-        const isCorrect = quizElements.selectedAnswers.some(answer => currentQuestion.answer.includes(answer));
-        if (isCorrect) {
+        setTimeout(() => {
             quizLogic.moveToNextQuestion()
-        } else {
-            setTimeout(() => {
-                quizLogic.moveToNextQuestion()
-            }, 500)
-        }
+        }, 500)
     },
 
     handleTextInputAnswer: () => {
         const input = document.querySelector('.text-input');
-        if (!input.value) {
+        if (input && !input.value) {
             alert('Please enter an answer');
             return;
         }
-        quizElements.selectedAnswers = [input.value.trim()];
+        if (input) quizElements.selectedAnswers = [input.value.trim()];
     },
 
     updateScore: (currentQuestion) => {
-        if (currentQuestion.type === questionType.multipleChoice || currentQuestion.type === questionType.trueFalse) {
+        if (currentQuestion.type === 'multiple_choice' || currentQuestion.type === 'true_false') {
             quizLogic.checkSingleAnswer(currentQuestion);
-        } else if (currentQuestion.type === questionType.multipleAnswer) {
+        } else if (currentQuestion.type === 'multiple_answer') {
             quizLogic.checkMultipleAnswers(currentQuestion);
-        } else if (currentQuestion.type === questionType.textInput) {
+        } else if (currentQuestion.type === 'text_input') {
             quizLogic.checkTextInputAnswer(currentQuestion);
         }
     },
@@ -343,9 +334,18 @@ const quizLogic = {
             uiUpdates.updateTimerDisplay();
             if (quizElements.timeLeft === 0) {
                 clearInterval(quizElements.timerInterval);
-                quizLogic.moveToNextQuestion();
+                quizLogic.autoSubmit();
             }
-        }, 500);
+        }, 600);
+    },
+
+    autoSubmit: () => {
+        if (quizElements.selectedAnswers.length === 0) {
+            alert('Time is up! No answer selected. Moving to the next question.');
+            quizLogic.moveToNextQuestion(true);
+        } else {
+            quizLogic.nextQuestion();
+        }
     },
 
     moveToNextQuestion: () => {
@@ -359,13 +359,20 @@ const quizLogic = {
     },
 
     shuffleOptions: (options) => {
-        for (let i = options.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [options[i], options[j]] = [options[j], options[i]];
-        }
-        return options;
+        return options.sort(() => Math.random() - 0.5);
     }
 };
 
-startBtn.addEventListener('click', () => uiUpdates.initQuiz());
-nextBtn.addEventListener('click', () => quizLogic.nextQuestion());
+const initializeEventListeners = () => {
+    const startBtn = document.getElementById('start-button');
+    const nextBtn = document.getElementById('next-button');
+
+    if (startBtn) startBtn.addEventListener('click', () => uiUpdates.initQuiz());
+    if (nextBtn) nextBtn.addEventListener('click', () => quizLogic.nextQuestion());
+};
+
+if (typeof window !== 'undefined') {
+    document.addEventListener('DOMContentLoaded', initializeEventListeners);
+}
+
+module.exports = { uiUpdates, quizLogic, quizElements, initializeEventListeners };
