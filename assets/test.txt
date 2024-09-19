@@ -282,3 +282,85 @@ describe('quizLogic.handleSingleSelection', () => {
         expect(option2.style.borderColor).toBe('initial');
     });
 });
+
+In terms of Single Responsibility Principle (SRP), this code mostly adheres to it, but there are a few areas that could
+be improved. Here's an analysis of how well each part follows SRP:
+What SRP Means:
+
+SRP states that a class, module, or function should have one, and only one, reason to change. In practice, this means
+ each function or component should focus on a single task or responsibility.
+Analyzing the Code:
+
+    quizElements and questionsArr:
+        SRP Status: Good.
+        Explanation: The quizElements object is responsible for maintaining the state of the quiz (e.g., currentQuestion,
+        score, selectedAnswers). It’s centralized and doesn’t do more than that, which aligns with SRP. Similarly,
+        questionsArr holds the questions and is separated from logic, so it's SRP-compliant.
+
+    initQuiz Function:
+        SRP Status: Needs Improvement.
+        Explanation: This function initializes the quiz by calling multiple different functions (showMainElements,
+        calculateTotalScore, renderQuestion). This is more like a coordinator function, which is okay, but it does multiple
+        things. If the initialization process changes (e.g., UI rendering, score calculation), this function could break SRP.
+        Suggestion: You could split the quiz setup responsibilities into separate functions, e.g., initializeUI and initializeQuizState.
+
+    calculateTotalScore Function:
+        SRP Status: Good.
+        Explanation: This function is responsible only for calculating the total score based on the answers. It focuses
+        on one responsibility (calculating score) and is compliant with SRP.
+
+    showMainElements Function:
+        SRP Status: Good.
+        Explanation: It’s responsible only for controlling the display of certain HTML elements when the quiz starts.
+        This single responsibility makes it SRP-compliant.
+
+    renderQuestion Function:
+        SRP Status: Needs Improvement.
+        Explanation: This function is responsible for displaying the current question, clearing previous options,
+        rendering new options, updating the question count, and starting the timer. It’s handling multiple tasks,
+        so if any of these responsibilities change, the function would need to be modified.
+        Suggestion: You could split this into smaller functions, like displayQuestion, renderOptions, and
+        startQuestionTimer, to make it more SRP-compliant.
+
+    renderOptions Function:
+        SRP Status: Good.
+        Explanation: This function focuses on rendering the appropriate options for the current question, and the logic
+        for different types of questions is well-handled. It could be considered SRP-compliant as it has a single focus.
+
+    handleOptionClick Function:
+        SRP Status: Good.
+        Explanation: This function only handles user interaction when an option is clicked, which is a focused responsibility.
+
+    highlightAnswer Function:
+        SRP Status: Good.
+        Explanation: This function is responsible for visually indicating which answer is correct or incorrect. This
+        responsibility is focused and SRP-compliant.
+
+    nextQuestion Function:
+        SRP Status: Needs Improvement.
+        Explanation: This function handles multiple responsibilities, such as validating answers, updating the score,
+        rendering the next question, and starting the next timer. It could be broken into smaller functions.
+        Suggestion: Split into smaller functions like validateAnswers, moveToNextQuestion, and updateUIForNextQuestion.
+
+    startTimer Function:
+        SRP Status: Good.
+        Explanation: This function handles the timer logic, and that's its only responsibility.
+
+    updateScore Function:
+        SRP Status: Good.
+        Explanation: This function focuses on updating the score based on the question type, and it delegates the actual
+         checking of answers to other functions. It adheres to SRP.
+
+Recommendations for Improvement:
+
+    Smaller Functions: Break down larger functions like renderQuestion, nextQuestion, and initQuiz into smaller functions to
+    improve readability, maintainability, and SRP compliance.
+    Function Naming: Make sure that function names reflect their focused responsibility, such as startQuestionTimer
+    instead of just startTimer to make the role clearer.
+
+Conclusion:
+
+Overall, the code is structured well, and most functions follow the Single Responsibility Principle. A few larger
+ functions can be refactored to ensure each function has only one responsibility, which will make the code easier to
+ maintain and less prone to bugs when changes are made.
+

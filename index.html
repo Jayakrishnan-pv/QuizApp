@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,7 +16,7 @@
 
 <body>
 <div id="quiz-container">
-    <div id="main" class="main">
+    <div id="main" class="main quiz-container">
         <img src="assets/istockphoto-1170984187-170667a%201.svg" id="logo" alt="logo">
         <div class="heading1">Simple Quiz</div>
         <button id="start-button">Start</button>
@@ -25,13 +24,13 @@
     <div id="heading">
         <div class="heading2">Simple Quiz</div>
         <div id="queDiv">
-            <div id="queNum"></div>
+            <div id="queNum" class="inline"></div>
             of
-            <div id="totalQue"></div>
+            <div id="totalQue" class="inline"></div>
             Questions
         </div>
     </div>
-    <div id="question-container">
+    <div id="question-container" class="quiz-container">
         <div class="question-sub">
         <div class="time-icon">
             <span class="material-symbols-outlined">timer</span>
@@ -43,13 +42,13 @@
         <div id="options"></div>
         <button id="next-button" class="button">Next</button>
     </div>
-    <div id="result-container">
+    <div id="result-container" class="quiz-container">
         <div class="heading1">Congratulation!</div>
         <img src="assets/pngtree-3d-trophy-best-of-champions-png-image_6210285%201.png" alt="">
         <div class="heading3">Score
-            <div id="score"></div>
+            <div id="score" class="inline"></div>
             /
-            <div id="totalScore"></div>
+            <div id="totalScore" class="inline"></div>
         </div>
     </div>
 </div>

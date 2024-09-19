@@ -1,6 +1,5 @@
 const {
     quizElements,
-    questionsArr,
     initQuiz,
     calculateTotalScore,
     renderQuestion,
@@ -12,6 +11,8 @@ const {
     autoSubmit,
     shuffleOptions,
     addNewQuestion,
+    renderTextInput,
+    highlightTextInput,
     initializeEventListeners
 } = require('../js/script.js');
 
@@ -93,14 +94,14 @@ test('autoSubmit should move to the next question when time runs out', () => {
 
 test('updateScore should update score for multiple_choice question correctly', () => {
     quizElements.selectedAnswers = ['b'];
-    updateScore(questionsArr[0]);
+    updateScore(quizElements.questionsArr[0]);
     expect(quizElements.score).toBe(1);
 });
 
 test('updateScore should update score for multiple_answer question correctly', () => {
     quizElements.currentQuestion = 1;
     quizElements.selectedAnswers = ['a', 'c'];
-    updateScore(questionsArr[6]);
+    updateScore(quizElements.questionsArr[6]);
     expect(quizElements.score).toBe(2);
 });
 
@@ -116,7 +117,7 @@ test('shuffleOptions should shuffle the options array', () => {
 });
 
 test('addNewQuestion should add new question into questionsArr', () => {
-    const initialLength = questionsArr.length;
+    const initialLength = quizElements.questionsArr.length;
     const newQuestion = {
         question: 'What is the capital of Germany?',
         options: [
@@ -137,13 +138,13 @@ test('addNewQuestion should add new question into questionsArr', () => {
         newQuestion.hint
     );
 
-    expect(questionsArr.length).toBe(initialLength + 1);
-    expect(questionsArr[questionsArr.length - 1]).toMatchObject(newQuestion);
+    expect(quizElements.questionsArr.length).toBe(initialLength + 1);
+    expect(quizElements.questionsArr[quizElements.questionsArr.length - 1]).toMatchObject(newQuestion);
 });
 
 test('calculateTotalScore should calculate the total score correctly', () => {
-    questionsArr.length = 0;
-    questionsArr.push(
+    quizElements.questionsArr.length = 0;
+    quizElements.questionsArr.push(
         { answer: 'a' },
         { answer: 'b' },
         { answer: 'c' }
@@ -152,3 +153,24 @@ test('calculateTotalScore should calculate the total score correctly', () => {
     expect(totalScore).toBe(3);
 });
 
+test('renderTextInput should create and append a text input element', () => {
+    const optionsContainer = document.createElement('div');
+    optionsContainer.id = 'options';
+    document.body.appendChild(optionsContainer);
+    renderTextInput();
+    const input = document.querySelector('.text-input');
+    expect(input).not.toBeNull();
+    expect(input.type).toBe('text');
+});
+
+test('highlightTextInput should set the border color based on the answer correctness', () => {
+    const input = document.createElement('input');
+    input.classList.add('text-input');
+    document.body.appendChild(input);
+    quizElements.borderColor = { correct: 'green', incorrect: 'red' };
+    quizElements.selectedAnswers = ['html'];
+    highlightTextInput('html', 'html', quizElements.borderColor);
+    expect(input.style.borderColor).toBe('green');
+    highlightTextInput('html', 'css', quizElements.borderColor);
+    expect(input.style.borderColor).toBe('red');
+});
